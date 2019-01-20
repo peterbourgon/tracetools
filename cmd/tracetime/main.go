@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"regexp"
-	//"time"
 
 	"github.com/FiloSottile/tracetools/pprof"
 	"github.com/FiloSottile/tracetools/trace"
@@ -56,9 +55,13 @@ func main() {
 	seriesMap := extractTimeSeries(events, re)
 	for id, series := range seriesMap {
 		log.Println("Series for stack ID =", id, "fn name =", series.fnName)
+		var latencies, times []float64
 		for _, lat := range series.durations {
 			log.Printf("\tLatancy = %+v\n", lat)
+			latencies = append(latencies, float64(lat.duration/1000000)) //From nanoseconds to milliseconds
+			times = append(times, float64(lat.ts/1000000))
 		}
+		newTimeseries(times, latencies)
 	}
 }
 
