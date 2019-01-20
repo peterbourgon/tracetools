@@ -34,6 +34,9 @@ func newTimeseries(xvalues, yvalues []float64) error {
 		// X axis
 		XAxis: chart.XAxis{
 			Style: chart.StyleShow(),
+			TickStyle: chart.Style{
+				TextRotationDegrees: 45.0,
+			},
 			ValueFormatter: func(v interface{}) string {
 				return fmt.Sprintf("%d ms", int(v.(float64)))
 			},
