@@ -55,7 +55,7 @@ func main() {
 	}
 	re, err := regexp.Compile(*filter)
 	if err != nil {
-		log.Fatalln("Faile to compile filter regex:", err)
+		log.Fatalln("Failed to compile filter regex:", err)
 	}
 
 	events, err := pprof.LoadTrace(traceFile, programBinary)
