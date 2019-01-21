@@ -13,7 +13,7 @@ import (
 
 var usageMessage = `Usage: tracetime -filter=ServeHTTP [binary] trace.out
 
- -filter=REGEX   Syscall events matching this regex will be plotted.`
+ -filter=REGEX   Function events matching this regex will be plotted.`
 
 var (
 	filter = flag.String("filter", "", "")
