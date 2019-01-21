@@ -6,16 +6,25 @@ import (
 	"os"
 )
 
-func newTimeseries(xvalues, yvalues []float64) error {
-	mainSeries := chart.ContinuousSeries{
-		Name: "Prod Request Timings",
-		Style: chart.Style{
-			Show:        true,
-			StrokeColor: chart.ColorBlue,
-			FillColor:   chart.ColorBlue.WithAlpha(100),
-		},
-		XValues: xvalues,
-		YValues: yvalues,
+type plotSeries struct {
+	stackID          string
+	xvalues, yvalues []float64
+}
+
+func newTimeseries(seriesByFunc []plotSeries, funcName string) error {
+	var allSeries []chart.Series
+
+	for _, s := range seriesByFunc {
+		allSeries = append(allSeries, chart.ContinuousSeries{
+			Name: s.stackID,
+			Style: chart.Style{
+				Show:        true,
+				StrokeColor: chart.ColorBlue,
+				FillColor:   chart.ColorBlue.WithAlpha(100),
+			},
+			XValues: s.xvalues,
+			YValues: s.yvalues,
+		})
 	}
 
 	graph := chart.Chart{
@@ -46,13 +55,11 @@ func newTimeseries(xvalues, yvalues []float64) error {
 				StrokeWidth: 1.0,
 			},
 		},
-		Series: []chart.Series{
-			mainSeries,
-		},
+		Series: allSeries,
 	}
 	graph.Elements = []chart.Renderable{chart.LegendThin(&graph)}
 
-	f, err := os.Create("./test.png")
+	f, err := os.Create(funcName + ".png")
 	if err != nil {
 		return err
 	}

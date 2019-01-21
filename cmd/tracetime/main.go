@@ -52,16 +52,30 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//Extract the time series from the list events
 	seriesMap := extractTimeSeries(events, re)
-	for id, series := range seriesMap {
-		log.Println("Series for stack ID =", id, "fn name =", series.fnName)
-		var latencies, times []float64
-		for _, lat := range series.durations {
-			log.Printf("\tLatancy = %+v\n", lat)
-			latencies = append(latencies, float64(lat.duration/1000000)) //From nanoseconds to milliseconds
-			times = append(times, float64(lat.ts/1000000))
+
+	//Group timeseries by function name
+	seriesPerFunc := make(map[string][]timeSeries)
+	for _, series := range seriesMap {
+		s := seriesPerFunc[series.fnName]
+		s = append(s, series)
+		seriesPerFunc[series.fnName] = s
+	}
+
+	//Plot overlapping graph for each function
+	for fnName, setOfSeries := range seriesPerFunc {
+		var allSeries []plotSeries
+		for _, s := range setOfSeries {
+			var p plotSeries
+			for _, lat := range s.durations {
+				p.yvalues = append(p.yvalues, float64(lat.duration))
+				p.xvalues = append(p.xvalues, float64(lat.ts))
+			}
+			p.stackID = fmt.Sprintf("Stack %v", s.stkID)
+			allSeries = append(allSeries, p)
 		}
-		newTimeseries(times, latencies)
+		newTimeseries(allSeries, fnName)
 	}
 }
 
@@ -72,19 +86,21 @@ type latency struct {
 
 type timeSeries struct {
 	fnName    string
+	stkID     uint64
 	durations []latency
 }
 
 func extractTimeSeries(events []*trace.Event, regex *regexp.Regexp) map[uint64]timeSeries {
 	series := make(map[uint64]timeSeries)
 	for _, ev := range events {
-		if ev.Type != trace.EvGoSysCall || ev.Link == nil || ev.StkID == 0 || len(ev.Stk) == 0 {
+		if ev.Link == nil || ev.StkID == 0 || len(ev.Stk) == 0 {
 			continue
 		}
 		if regex.FindStringIndex(ev.Stk[0].Fn) == nil {
 			continue
 		}
 		d := series[ev.StkID]
+		d.stkID = ev.StkID
 		d.durations = append(d.durations, latency{
 			ts:       ev.Ts,
 			duration: ev.Link.Ts - ev.Ts,
