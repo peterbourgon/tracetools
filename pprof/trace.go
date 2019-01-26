@@ -16,10 +16,10 @@ func LoadTrace(traceFile, programBinary string) ([]*trace.Event, error) {
 	defer tracef.Close()
 
 	// Parse and symbolize.
-	events, err := trace.Parse(bufio.NewReader(tracef), programBinary)
+	parseRes, err := trace.Parse(bufio.NewReader(tracef), programBinary)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse trace: %v", err)
 	}
 
-	return events, nil
+	return parseRes.Events, nil
 }
