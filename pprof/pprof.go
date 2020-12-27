@@ -8,8 +8,8 @@
 package pprof
 
 import (
-	"github.com/FiloSottile/tracetools/trace"
 	"github.com/google/pprof/profile"
+	"github.com/peterbourgon/tracetools/trace"
 )
 
 // Record represents one entry in pprof-like profiles.

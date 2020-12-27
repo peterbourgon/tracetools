@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/FiloSottile/tracetools/pprof"
-	"github.com/FiloSottile/tracetools/trace"
+	"github.com/peterbourgon/tracetools/pprof"
+	"github.com/peterbourgon/tracetools/trace"
 )
 
 var usageMessage = `Usage: tracehist -filter=ServeHTTP [binary] trace.out

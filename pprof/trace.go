@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FiloSottile/tracetools/trace"
+	"github.com/peterbourgon/tracetools/trace"
 )
 
 func LoadTrace(traceFile, programBinary string) ([]*trace.Event, error) {

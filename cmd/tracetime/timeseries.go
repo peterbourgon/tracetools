@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/wcharczuk/go-chart"
 	"os"
+
+	"github.com/wcharczuk/go-chart"
 )
 
 type plotSeries struct {

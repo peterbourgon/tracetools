@@ -1,4 +1,4 @@
-IMPORT_PATH := github.com/FiloSottile/tracetools
+IMPORT_PATH := github.com/peterbourgon/tracetools
 
 V := 1 # When V is set, print commands and build progress.
 
@@ -70,7 +70,7 @@ setup: clean .GOPATH/.ok
 	    echo "/.GOPATH" >> .gitignore; \
 	    echo "/bin" >> .gitignore; \
 	fi
-	go get -u github.com/FiloSottile/gvt
+	go get -u github.com/peterbourgon/gvt
 	- ./bin/gvt fetch golang.org/x/tools/cmd/goimports
 	- ./bin/gvt fetch github.com/wadey/gocovmerge
 
